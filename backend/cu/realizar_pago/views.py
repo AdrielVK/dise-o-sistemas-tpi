@@ -63,14 +63,13 @@ def realizar_pago(request):
     factura = search_factura(rto)
     
     modo_de_pago = request.data['modo_de_pago']
-    #imprimir = request.data['imprimir']
+    
 
     if modo_de_pago == 'efectivo':
-        #if imprimir:
-        #    imprimir_factura(factura)
+        
 
-        '''BORRO LA RTO Y EL VEHICULO DE LA BD'''
 
+        #BORRO LA RTO Y EL VEHICULO DE LA BD
         #factura.delete()
         vehiculo.delete()
         rto.delete()
@@ -83,8 +82,8 @@ def realizar_pago(request):
         result = pago_tarjeta(request, factura.calcularMonto())
 
         if result:
-            '''BORRO LA RTO Y EL VEHICULO DE LA BD'''
 
+            #'''BORRO LA RTO Y EL VEHICULO DE LA BD'''
             #factura.delete()
             vehiculo.delete()
             rto.delete()

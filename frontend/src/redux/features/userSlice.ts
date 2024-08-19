@@ -88,14 +88,9 @@ export const loginUser = createAsyncThunk(
         } catch (error: any) {
             console.log("login user")
             console.log(error)
-            if (error.response && error.response.data) {
-                
-                return thunkAPI.rejectWithValue(error);
-                
-            } else {
-                // Return a generic error message if the server response is not available
-                return thunkAPI.rejectWithValue({ error: 'An error occurred during login' });
-            }
+             
+            return thunkAPI.rejectWithValue(error.response.data);
+         
         }
     }
 )

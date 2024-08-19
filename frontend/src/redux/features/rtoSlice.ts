@@ -39,7 +39,7 @@ export interface RtoState {
     error: string | null;
     loading: boolean;
     message: string | null;
-    msg_success: boolean
+    pago_success: boolean
 }
 
 interface ActionPayloadSearchRto {
@@ -53,7 +53,7 @@ const initialState: RtoState = {
     error: null,
     loading: false,
     message: null,
-    msg_success: true
+    pago_success: false
 }
 
 // Thunks
@@ -84,7 +84,7 @@ export interface PagoPayload {
 
 export const pagoContado = createAsyncThunk(
     'rto/pago/contado',
-    async (credentials: { patente: string; imprimir: boolean }, thunkAPI) => {
+    async (credentials: { patente: string }, thunkAPI) => {
         const accessToken = localStorage.getItem('accessToken');
 
         try {
@@ -92,7 +92,7 @@ export const pagoContado = createAsyncThunk(
                 `${import.meta.env.VITE_BACKEND_URL}/realizar_pago/pagar/`,
                 {
                     patente: credentials.patente,
-                    imprimir: !(credentials.imprimir),
+                    //imprimir: !(credentials.imprimir),
                     modo_de_pago: 'efectivo'
                 },
                 {
@@ -111,7 +111,7 @@ export const pagoContado = createAsyncThunk(
 
 export const pagoTarjeta = createAsyncThunk(
     'rto/pago/tarjeta',
-    async (credentials: {patente:string, imprimir:boolean, nro:number, codSeg:number}, thunkAPI) => {
+    async (credentials: {patente:string, nro:number, codSeg:number}, thunkAPI) => {
         const accessToken = localStorage.getItem('accessToken');
 
         try {
@@ -119,7 +119,7 @@ export const pagoTarjeta = createAsyncThunk(
                 `${import.meta.env.VITE_BACKEND_URL}/realizar_pago/pagar/`,
                 {
                     patente: credentials.patente,
-                    imprimir: !(credentials.imprimir),
+                    //imprimir: !(credentials.imprimir),
                     modo_de_pago: 'tarjeta',
                     nro: credentials.nro,
                     cod_seguridad: credentials.codSeg
@@ -140,7 +140,6 @@ export const pagoTarjeta = createAsyncThunk(
     }
 )
 
-// Slice
 const rtoSlice = createSlice({
     name: 'rto',
     initialState,
@@ -149,13 +148,13 @@ const rtoSlice = createSlice({
         builder
             .addCase(pagoTarjeta.fulfilled, (state, action: PayloadAction<PagoPayload>) => {
                 state.loading = false;
-                state.msg_success = true
+                state.pago_success = true
                 state.message = action.payload.success;
             })
             .addCase(pagoTarjeta.rejected, (state, action: PayloadAction<any>) => {
                 state.loading = false;
                 state.message = action.payload.detail;
-                state.msg_success = false
+                state.pago_success = false
 
             })
             .addCase(pagoTarjeta.pending, (state) => {

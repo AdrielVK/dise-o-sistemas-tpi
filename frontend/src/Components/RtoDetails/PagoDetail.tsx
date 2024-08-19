@@ -19,25 +19,24 @@ const PagoDetailModal: React.FC<PagoDetailProps> = ({factura, patente}) => {
     const [contado, setContado] = useState<boolean>(false)
     const [tarjeta, setTarjeta] = useState<boolean>(false)
 
-    const [imprimir, setImprimir] = useState<boolean>(true)
 
     const [nroTarjeta, setNumeroTarjeta] = useState<number>(0)
     const [codSeg, setCodSeg] = useState<number>(0)
 
 
     const message:string|null = useSelector((state:RootState) => state.rto.message)
-    const msg_style:boolean = useSelector((state:RootState) => state.rto.msg_success)
+    const pago_success:boolean = useSelector((state:RootState) => state.rto.pago_success)
 
     const dispatch: AppDispatch = useDispatch();
 
     const onSubmitPago = () => {
         
-        dispatch(pagoContado({patente, imprimir}))
+        dispatch(pagoContado({patente}))
     }
 
     const onSubmitPagoTarjeta = () => {
         
-        dispatch(pagoTarjeta({patente, imprimir, nro:nroTarjeta, codSeg}))
+        dispatch(pagoTarjeta({patente, nro:nroTarjeta, codSeg}))
         
     }
 
@@ -56,9 +55,7 @@ const PagoDetailModal: React.FC<PagoDetailProps> = ({factura, patente}) => {
         setTarjeta(false)
     }
 
-    const handleImprimir = () => {
-        setImprimir(!imprimir)
-    }
+    
 
     const handleChangeCodSeg = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
@@ -104,7 +101,6 @@ const PagoDetailModal: React.FC<PagoDetailProps> = ({factura, patente}) => {
                 {
                     tarjeta&& !contado ?
                     <>
-                        <Button disable_option={imprimir} onClickAction={handleImprimir} text="Imprimir factura"/>
                         <input
                             id="nro_tarjeta"
                             value={nroTarjeta}
@@ -123,13 +119,13 @@ const PagoDetailModal: React.FC<PagoDetailProps> = ({factura, patente}) => {
                             className="input"
                             placeholder="Codigo de seguridad"
                         />
+                        <Button text="Realizar" onClickAction={onSubmitPagoTarjeta}/>
                         {
-                            !imprimir ?
+                            pago_success &&
                             <PDFDownloadLink document={<FacturaPDF tarjeta={true} factura={factura}/>} fileName="factura.pdf">
-                                <Button text="Realizar" onClickAction={onSubmitPagoTarjeta}/>
+                                <Button text="Imprimir factura"/>
                             </PDFDownloadLink>
-                            :
-                            <Button text="Realizar" onClickAction={onSubmitPagoTarjeta}/>
+                            
                         }
                         <span onClick={CancelPago} className="cancel">Cancelar</span>
                     </>
@@ -140,14 +136,12 @@ const PagoDetailModal: React.FC<PagoDetailProps> = ({factura, patente}) => {
                     contado && !tarjeta ?
                     (
                         <>
-                        <Button disable_option={imprimir} onClickAction={handleImprimir} text="Imprimir factura"/>
+                        <Button text="Realizar" onClickAction={onSubmitPago}/>
                         {
-                            !imprimir ?
-                            <PDFDownloadLink document={<FacturaPDF factura={factura} tarjeta={false}/>} fileName="factura.pdf">
-                                <Button text="Realizar" onClickAction={onSubmitPago}/>
+                            pago_success &&
+                            <PDFDownloadLink document={<FacturaPDF tarjeta={false} factura={factura}/>} fileName="factura.pdf">
+                                <Button text="Imprimir factura"/>
                             </PDFDownloadLink>
-                            :
-                            <Button text="Realizar" onClickAction={onSubmitPago}/>
                         }
                         <span onClick={CancelPago} className="cancel">Cancelar</span>
                         </>
@@ -155,7 +149,7 @@ const PagoDetailModal: React.FC<PagoDetailProps> = ({factura, patente}) => {
                 }
                 {
                     message &&
-                    <p className={msg_style ? `accept-rto`:`reject-rto`}>{message}</p>
+                    <p className={pago_success ? `accept-rto`:`reject-rto`}>{message}</p>
                 }
             </div>
         </div>

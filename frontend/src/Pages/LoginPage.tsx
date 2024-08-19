@@ -17,9 +17,9 @@ const Login:React.FC<LoginProps> = () => {
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
-    const { loading, error } = useSelector((state: RootState) => state.user);
+    const loading = useSelector((state: RootState) => state.user.loading);
     const dispatch: AppDispatch = useDispatch();
-
+    const error = useSelector((state: RootState) => state.user.error);
     const handleSubmit = (e:React.FormEvent) => {
         e.preventDefault();
         dispatch(loginUser({username, password}));
