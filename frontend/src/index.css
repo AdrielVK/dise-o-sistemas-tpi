@@ -1,0 +1,28 @@
+:root {
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 500;
+  line-height: 1.5;
+  font-size: large;
+  /*color: rgba(255, 255, 255, 0.87);*/
+  /*background-color: #242424;*/
+
+  background-color: white;
+  color:#151515;
+
+}
+
+body{
+  margin:0;
+}
+
+.text{
+  margin: 0;
+  height: fit-content;
+}
+
+.link{
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: black;
+}

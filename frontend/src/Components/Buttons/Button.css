@@ -1,0 +1,29 @@
+.btn {
+    width: 250px;
+    margin: 10px;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    
+    color: white;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 500;
+    font-size: 0.7rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: 1s ease;
+    
+}
+
+.bk-grey{
+    background-color: lightgray;
+}
+
+.bk-blue{
+    background-color: #385f71;
+}
+
+.btn:hover {
+    color: lightgray;
+    background-color: #2b4162;
+}

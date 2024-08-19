@@ -1,0 +1,45 @@
+.cont{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.ul-home{
+    margin-top: 120px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    list-style: none;
+    /*background-color: rgb(245, 245, 245);+*/
+    box-shadow: 0px 5px 400px #385f71; /* Sombra suave */
+    border-radius: 10px;
+    transition:  0.5s ease;
+}
+
+.ul-home:hover{
+    box-shadow: 0px 5px 400px #2b4162;
+}
+
+.li-menu{
+    font-weight: 500;
+    display: flex;
+    width: 250px;
+    margin: 5px;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.5s ease;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.li-menu:hover{
+    background-color: rgb(245, 245, 245);
+    font-weight: 600;
+}
+
+.icon{
+    width: 25px;
+    margin: 5px;
+}

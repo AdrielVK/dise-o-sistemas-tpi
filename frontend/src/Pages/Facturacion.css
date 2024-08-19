@@ -1,0 +1,11 @@
+.form-fact{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cont-fact{
+    flex-direction: column;
+    align-items: center;
+}
