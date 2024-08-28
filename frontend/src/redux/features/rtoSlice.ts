@@ -201,65 +201,6 @@ export interface PagoPayload {
     success: string;
 }
 
-/*export const pagoContado = createAsyncThunk(
-    'rto/pago/contado',
-    async (credentials: { patente: string }, thunkAPI) => {
-        const accessToken = localStorage.getItem('accessToken');
-
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/realizar_pago/pagar/`,
-                {
-                    patente: credentials.patente,
-                    //imprimir: !(credentials.imprimir),
-                    modo_de_pago: 'efectivo'
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            );
-            return response.data;
-            
-        } catch (error: any) {
-            return thunkAPI.rejectWithValue(error.response.data);
-        }
-    }
-);
-
-export const pagoTarjeta = createAsyncThunk(
-    'rto/pago/tarjeta',
-    async (credentials: {patente:string, nro:number, codSeg:number}, thunkAPI) => {
-        const accessToken = localStorage.getItem('accessToken');
-
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/realizar_pago/pagar/`,
-                {
-                    patente: credentials.patente,
-                    //imprimir: !(credentials.imprimir),
-                    modo_de_pago: 'tarjeta',
-                    nro: credentials.nro,
-                    cod_seguridad: credentials.codSeg
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                }
-            );
-            console.log(response.data)
-            return response.data
-        } catch(error:any){
-            console.log(thunkAPI.rejectWithValue(error.response))
-            return thunkAPI.rejectWithValue(error.response.data);
-
-        }
-    }
-)
-*/
-
 
 const rtoSlice = createSlice({
     name: 'rto',
@@ -272,7 +213,7 @@ const rtoSlice = createSlice({
                 state.error = null;
                 state.rto = action.payload.rto;
             })
-            .addCase(mostrarRto.rejected, (state, action: PayloadAction<any>) => {
+            .addCase(mostrarRto.rejected, (state) => {
                 state.loading = false;
                 state.message = "No se encotro patente";
 
@@ -290,7 +231,7 @@ const rtoSlice = createSlice({
                 state.monto = action.payload.monto;
                 state.factura = action.payload.factura;
             })
-            .addCase(mostrarMonto.rejected, (state, action: PayloadAction<any>) => {
+            .addCase(mostrarMonto.rejected, (state) => {
                 state.loading = false;
                 state.error = "Error al obtener monto";
             })

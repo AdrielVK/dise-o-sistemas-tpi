@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import { Factura, Rto } from "../../redux/features/rtoSlice";
-import Button from "../Buttons/Button";
+import React from "react";
+import { Rto } from "../../redux/features/rtoSlice";
 import './RtoDetail.css'
-import PagoDetailModal from "./PagoDetail";
 
 interface RtoDetailProps{
     rto:Rto;
