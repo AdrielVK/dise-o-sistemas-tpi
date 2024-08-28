@@ -9,3 +9,9 @@
     flex-direction: column;
     align-items: center;
 }
+
+.cancel{
+    font-size: medium;
+    font-weight: 700;
+    cursor: pointer;
+}

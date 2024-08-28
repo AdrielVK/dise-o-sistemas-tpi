@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Factura, pagoContado, pagoTarjeta } from "../../redux/features/rtoSlice";
+import { Factura } from "../../redux/features/rtoSlice";
 import Button from "../Buttons/Button";
 import './PagoDetail.css'
 import { AppDispatch, RootState } from "../../redux/store";
@@ -31,12 +31,12 @@ const PagoDetailModal: React.FC<PagoDetailProps> = ({factura, patente}) => {
 
     const onSubmitPago = () => {
         
-        dispatch(pagoContado({patente}))
+        //dispatch(pagoContado({patente}))
     }
 
     const onSubmitPagoTarjeta = () => {
         
-        dispatch(pagoTarjeta({patente, nro:nroTarjeta, codSeg}))
+        //dispatch(pagoTarjeta({patente, nro:nroTarjeta, codSeg}))
         
     }
 
@@ -75,17 +75,7 @@ const PagoDetailModal: React.FC<PagoDetailProps> = ({factura, patente}) => {
 
     return (
         <div className="cont modal-pago">
-            <div className="div-modal column center">
-                <p className="title-modal">Conceptos:</p>
-                {
-                    factura.lineas.map((item, index) => (
-                        <div className="concept-element" key={index}>
-                            <p className="text-concept">{item.descripcion}</p>
-                            <p className="text-concept">${item.monto}</p>
-                        </div>
-                    ))
-                }
-            </div>
+            
             <div className="div-modal center">
                 <p className="title-modal">Total: ${factura.monto}</p>   
             </div>

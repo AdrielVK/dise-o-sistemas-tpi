@@ -4,14 +4,14 @@ import {
     Document,
     Text,
     StyleSheet,
-    Page,
-    View
+    Page
 } from '@react-pdf/renderer';
 
 
 interface PdfProps {
     factura: Factura,
-    tarjeta: boolean
+    tarjeta: boolean,
+    monto: number
 }
 
 const styles = StyleSheet.create({
@@ -35,35 +35,22 @@ const styles = StyleSheet.create({
     }
 })
 
-const FacturaPDF: React.FC<PdfProps> = ({factura, tarjeta}) => {
+const FacturaPDF: React.FC<PdfProps> = ({factura, tarjeta,monto}) => {
     return (
         <Document>
             <Page style={styles.page}>
                 <Text style={styles.item}>Factura: {factura.nro_factura}</Text>
                 <Text style={styles.item}>{factura.fecha_emision.toString()}</Text>
-                <Text style={[styles.szSmall, styles.item]}>Conceptos:</Text>
-                <View style={styles.item}>
-
-                {
-                    factura.lineas.map((item,index) => (
-                        <View key={index} style={styles.table}>
-
-                        
-                            <Text style={styles.mgRight}>{item.descripcion}</Text>
-                            <Text style={styles.mgRight}>${item.monto}</Text>
-                        
-                        </View>
-                    ))
-                }
-                </View>
                 
-                <Text style={styles.item}>Total: ${factura.monto}</Text>
+                
+                <Text style={styles.item}>Total: ${monto}</Text>
                 {
                     tarjeta ? 
                     <Text style={styles.item}>Pagado con tarjeta</Text>
                     :
                     <Text style={styles.item}>Pagado</Text>
                 }
+                <Text style={styles.item}>{factura.pagado}</Text>
                 <Text style={styles.item}>Taller 9xpertos CUIT:11-111111-11</Text>
             </Page>
         </Document>

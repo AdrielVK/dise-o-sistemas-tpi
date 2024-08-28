@@ -6,18 +6,13 @@ import PagoDetailModal from "./PagoDetail";
 
 interface RtoDetailProps{
     rto:Rto;
-    factura:Factura;
+
 }
 
 
-const RtoDetail: React.FC<RtoDetailProps> = ({rto, factura}) => {
+const RtoDetail: React.FC<RtoDetailProps> = ({rto}) => {
     
-    const [pagoModal, setPagoModal] = useState<boolean>(false)
-
-    const handleModal = () =>{
-        setPagoModal(!pagoModal)
-    }
-
+    
     const styleCond:string = 
         rto.resultado == 'aceptado' ? 'accept-rto' :
         rto.resultado == 'rechazado' ? 'reject-rto' :
@@ -41,17 +36,8 @@ const RtoDetail: React.FC<RtoDetailProps> = ({rto, factura}) => {
                     </div>
                     <p className="item-rto desc">{rto.descripcion}</p>
                 </div>
-                <div className="cont-button">
-                    <Button text="Realizar Pago" onClickAction={handleModal}/>
-                </div>
             </div>
-            {
-                pagoModal &&
-                <div className="modal-overlay">
-                    <span className="close-modal" onClick={handleModal}>Cerrar</span>
-                    <PagoDetailModal patente={rto.rel_vehiculo.patente} factura={factura} />
-                </div>
-            }
+           
         </>
     )
 }

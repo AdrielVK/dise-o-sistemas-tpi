@@ -1,35 +1,35 @@
 from rest_framework import serializers
 from .models import *
 
+class CategoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categoria
+        fields = ['id','precio','tipo']
+
 class VehiculoSerializer(serializers.ModelSerializer):
-    categoria_descripcion = serializers.SerializerMethodField()
+    rel_categoria = CategoriaSerializer()
 
     class Meta:
         model = Vehiculo
-        fields = ['patente', 'categoria', 'categoria_descripcion', 'modelo', 'marca', 'anio', 'primera_rto']
-
-    def get_categoria_descripcion(self, obj):
-        return dict(Vehiculo.categorias).get(obj.categoria, obj.categoria)
+        fields = ['id', 'patente', 'rel_categoria', 'modelo', 'marca', 'anio', 'primera_rto']
 
 class RtoSerializer(serializers.ModelSerializer):
     rel_vehiculo = VehiculoSerializer()
     class Meta:
         model = Rto
-        fields = ['descripcion','nombre_mecanico','resultado','rel_vehiculo']
+        fields = ['id','fecha','nombre_mecanico','resultado','rel_vehiculo']
 
-class LineaFacturaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LineaFactura
-        fields = ['monto','descripcion']
 
 class FacturaSerializer(serializers.ModelSerializer):
-    lineas = LineaFacturaSerializer(many=True)
-    monto = serializers.SerializerMethodField()
+
+    rel_rto = RtoSerializer()
 
     class Meta:
         model = Factura
-        fields = ['nro_factura','fecha_emision', 'lineas', 'monto']
+        fields = ['id', 'nro_factura', 'rel_rto','fecha_emision', 'pagado']
 
+
+    '''
     def get_monto(self, obj:Factura):
         return obj.calcularMonto()
     
@@ -53,4 +53,4 @@ class FacturaSerializer(serializers.ModelSerializer):
         for linea_data in lineas_data:
             LineaFactura.objects.create(rel_factura=instance, **linea_data)
 
-        return instance
+        return instance'''

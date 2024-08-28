@@ -1,8 +1,12 @@
 from .views import *
-from django.urls import path
-from .views import realizar_pago,get_rto_and_factura_serialized
+from django.urls import path, include
+from .views import *
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'pagar', UI, basename='pagar')
+
 
 urlpatterns = [
-    path('get_rto/', get_rto_and_factura_serialized, name='get_rto'),
-    path('pagar/', realizar_pago, name='realizar_pago'),
+    path('', include(router.urls))
 ]

@@ -5,12 +5,13 @@ import './Login.css'
 import Button from "../Components/Buttons/Button";
 import { AppDispatch, RootState } from "../redux/store";
 import { useDispatch } from "react-redux";
-import { Factura, Rto, searchRto } from "../redux/features/rtoSlice";
+import { Factura, mostrarMonto, mostrarRto, Rto } from "../redux/features/rtoSlice";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import RtoDetail from "../Components/RtoDetails/RtoDetail";
 import Spinner from "../Components/Ui/Spinner";
 import '../Components/Ui/Spinner.css'
+import PagoModal from "../Components/RtoDetails/PagoModal";
 
 interface FacturacionProps {
     
@@ -24,11 +25,22 @@ const FacturacionPage:React.FC<FacturacionProps> = ({}) => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const dispatch: AppDispatch = useDispatch();
+    const [pagoModal, setPagoModal] = useState<boolean>(false)
+
+
+
+
+    const handleModal = () =>{
+        if (rto != null){
+            dispatch(mostrarMonto({id_rto:rto.id}))
+        }
+        setPagoModal(!pagoModal)
+    }
 
     useEffect(() => {
         const patenteFromUrl = searchParams.get('patente');
         if (patenteFromUrl) {
-            dispatch(searchRto({ patente: patenteFromUrl }));
+            dispatch(mostrarRto({ patente: patenteFromUrl }));
         }
     }, [searchParams, dispatch]);
 
@@ -42,6 +54,7 @@ const FacturacionPage:React.FC<FacturacionProps> = ({}) => {
     const factura:Factura|null = useSelector((state:RootState) => state.rto.factura)
     const loading:boolean = useSelector((state:RootState) => state.rto.loading)
     const error:string|null = useSelector((state:RootState) => state.rto.error)
+    const monto: number|null = useSelector((state:RootState) => state.rto.monto)
 
     const handleSubmit = (e:React.FormEvent) => {
         e.preventDefault();
@@ -67,10 +80,32 @@ const FacturacionPage:React.FC<FacturacionProps> = ({}) => {
                 </form>
                 
                 {
-                    rto && factura ?
-                    <RtoDetail rto={rto} factura={factura} />
+                    rto && !pagoModal ?
+                    <>
+                    <RtoDetail rto={rto}/>
+                    <div className="cont-button">
+                        <Button text="Realizar Pago" onClickAction={handleModal}/>
+                    </div>
+                    </>
                     :
                     <></>
+                }
+                {
+                    pagoModal && monto &&
+                    <>
+                    <p className="item-rto heavy-font">Monto a pagar: ${monto}</p>
+                    <Button text="Pagar"/>
+                    <div className="cont-button">
+                        <p className="cancel" onClick={handleModal}>Cancelar</p>
+                    </div>
+                    </>
+                }
+                {
+                    monto && pagoModal && factura &&
+                    <>
+                    <PagoModal monto={monto} factura={factura} handler={handleModal}/>
+
+                    </>
                 }
                 {
                     loading?

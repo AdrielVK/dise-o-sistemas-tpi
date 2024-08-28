@@ -6,4 +6,4 @@ class IsAdmin(permissions.BasePermission):
 
 class IsAtencion(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated and request.user.role == 'atencion'
+        return request.user and request.user.is_authenticated and (request.user.role == 'atencion' or request.user.role == 'gerente')

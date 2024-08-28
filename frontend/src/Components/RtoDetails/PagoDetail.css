@@ -41,8 +41,10 @@
     align-items: center;
 }
 
-.cancel{
-    font-size: medium;
+.label{
+    font-size: small;
     font-weight: 700;
-    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }

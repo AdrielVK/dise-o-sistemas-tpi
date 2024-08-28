@@ -1,81 +1,80 @@
 from django.db import models
-from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
+from django_extensions.db.fields import AutoSlugField
+from decimal import Decimal
+
+
+class Categoria(models.Model):
+    precio = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
+    tipo = models.CharField(max_length=2 ,null=False, blank=False)
 
 
 class Vehiculo(models.Model):
-
-    categorias = (
-        ("l", "menos de 4 ruedas"),
-        ("m", "4 ruedas o mas, menos de 1 tonelada, pasajeros"),
-        ("n", "4 ruedas o mas, menos de 1 tonelada, carga"),
-        ("o", "acoplados")
-    )
+    
     patente = models.CharField(max_length=7, null=False, blank=False, unique=True)
-    categoria = models.CharField(max_length=2, choices=categorias, default="m")
     modelo = models.CharField(max_length=50)
     marca = models.CharField(max_length=50)
     anio = models.IntegerField()
     primera_rto = models.BooleanField(default=True)
+    
+    rel_categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='cat')
+    #rel_factura = models.ForeignKey(Factura, on_delete=models.SET_NULL, blank=True, null=True, related_name='rel-rto')
 
     def __str__(self):
         return f'vehiculo {self.patente}'
-    
-    
-
 
 class Rto(models.Model):
+    
     resultados = (
         ("aceptado", "Aceptado"),
         ("rechazado", "Rechazado"),
         ("condicional", "Condicional")
     )
 
-    descripcion = models.CharField(max_length=255)
-    nombre_mecanico = models.CharField(max_length=255)
+    fecha = models.DateField()
+    nombre_mecanico = models.CharField(max_length=255)  
     resultado = models.CharField(choices=resultados, default="rechazado", max_length=15)
+    
     rel_vehiculo = models.OneToOneField(Vehiculo, on_delete=models.CASCADE, blank=False)
 
     def __str__(self):
         return f'rto: {self.resultado}'
     
+    @staticmethod
+    def getUltimaRto( vel:Vehiculo):
+        return Rto.objects.get(rel_vehiculo=vel)
+
+
 
 class Factura(models.Model):
-    nro_factura = models.IntegerField(unique=True)
-    fecha_emision = models.DateField()
-    rel_rto = models.OneToOneField(Rto, on_delete=models.SET_NULL, blank=True, null=True)
 
+    nro_factura = AutoSlugField(populate_from='id', unique=True, max_length=10)
+    fecha_emision = models.DateField(auto_now_add=True)
+    pagado = models.BooleanField(default=False)
+
+    rel_rto = models.ForeignKey(Rto, on_delete=models.SET_NULL, blank=True, null=True, related_name='rto')
+    #rel_categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='rel-categoria')
+    
     def __str__(self):
         return f'factura nro {self.nro_factura}'
     
-    def calcularMonto(self):
-        lineas = self.lineas.all()
-        total = sum(linea.monto for linea in lineas)
-        return total
-    
-    def agregarLineaFactura(self, descripcion, monto):
-        LineaFactura.objects.create(rel_factura = self, descripcion = descripcion, monto = monto) 
-    
-class LineaFactura(models.Model):
-    monto = models.DecimalField(max_digits=10, decimal_places=2)
-    descripcion = models.CharField(max_length=255)
-    rel_factura =models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='lineas', blank=False)
-
-    def __str__(self):
-        return f'{self.descripcion[:10]}...'
-    
+    def calcularMonto(self, precio, anio:int, pri_rto:bool):
+        if not pri_rto:
+            if anio > 2010:
+                return precio
+            else:
+                return precio * Decimal('1.1')
+        else:
+            if anio > 2010:
+                return precio * Decimal('1.05')
+            else:
+                return precio * Decimal('1.15') 
 
 
-
-
-
-    '''SIMULA AL BANCO'''
-def validar_rango(valor):
-    if not (10**13 <= valor < 10**17):
-        raise ValidationError('El número debe tener entre 14 y 16 cifras.')
-    
+  
 class Tarjeta(models.Model):
     saldo = models.DecimalField(max_digits=12, decimal_places=2)
-    nro = models.BigIntegerField(validators=[validar_rango])
+    nro = models.IntegerField()
     cod_seguridad = models.IntegerField()
     fecha_vencimiento = models.DateField()
 
