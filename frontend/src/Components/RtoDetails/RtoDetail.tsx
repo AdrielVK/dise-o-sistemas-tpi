@@ -21,7 +21,7 @@ const RtoDetail: React.FC<RtoDetailProps> = ({rto}) => {
             <div className="cont cont-rto-detail">
                 <div className="element-rto">
                     
-                    <p className="item-rto">Categoria: {rto.rel_vehiculo.categoria}</p>
+                    <p className="item-rto">Categoria: {rto.rel_vehiculo.rel_categoria.tipo}</p>
                     <p className="item-rto">Marca: {rto.rel_vehiculo.marca}</p>
                     <p className="item-rto">Modelo: {rto.rel_vehiculo.modelo}</p>
                     <p className="item-rto">{rto.rel_vehiculo.anio}</p>

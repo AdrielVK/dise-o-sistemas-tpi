@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { Factura, mostrarMP, pagar } from "../../redux/features/rtoSlice";
+import { clearMessage, clearSuccessPay, Factura, mostrarMP, pagar } from "../../redux/features/rtoSlice";
 import { useSelector } from "react-redux";
 import Button from "../Buttons/Button";
 import './PagoDetail.css'
@@ -23,13 +23,16 @@ const PagoModal: React.FC<PagoModalProps> = ({
 
     useEffect(() => {
         dispatch(mostrarMP())
+        dispatch(clearMessage())
+        dispatch(clearSuccessPay())
     }, [])
 
     const metodos = useSelector((state:RootState) => state.rto.metodos)
     const [tarjeta, setTarjeta] = useState<boolean>(false);
     const [efectivo, setEfectivo] = useState<boolean>(false);
     const pago_success = useSelector((state:RootState) => state.rto.pago_success)
-
+    const error = useSelector((state:RootState) => state.rto.error)
+    const message = useSelector((state:RootState) => state.rto.message)
     const [nroTarjeta, setNumeroTarjeta] = useState<number>(0)
     const [codSeg, setCodSeg] = useState<number>(0)
 
@@ -61,7 +64,7 @@ const PagoModal: React.FC<PagoModalProps> = ({
     }
     const pagarActionTarjeta = () => {
         
-        dispatch(pagar({mp:'efectivo',id_factura:factura.id, monto:monto, nro_tarjeta:nroTarjeta, cod_seg:codSeg}))
+        dispatch(pagar({mp:'tarjeta',id_factura:factura.id, monto:monto, nro_tarjeta:nroTarjeta, cod_seg:codSeg}))
         
     }
 
@@ -145,6 +148,19 @@ const PagoModal: React.FC<PagoModalProps> = ({
                     }
                 </div>
                 </>
+            }
+            {
+                message && 
+                <div className="div-modal column center">
+                    <p className="accept-rto">{message}</p>
+                </div>
+            }
+            {
+                
+                error && 
+                <div className="div-modal column center">
+                    <p className="error-message">{error}</p>
+                </div>
             }
             <div className="div-modal column center">
                 <p className="cancel" onClick={resetStates}>Cancelar</p>

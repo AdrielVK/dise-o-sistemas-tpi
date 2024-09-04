@@ -1,10 +1,14 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+export interface Categoria {
+    precio: number,
+    tipo: string;
+}
+
 export interface Vehiculo {
     patente: string;
-    categoria: string;
-    categoria_desc: string;
+    rel_categoria: Categoria;
     modelo: string;
     marca: string;
     anio: number;
@@ -96,8 +100,8 @@ export const mostrarRto = createAsyncThunk(
 
             return response.data
         } catch(error:any) {
+            console.log(error)
             return thunkAPI.rejectWithValue(error.response.data);
-
         }
     }
 )
@@ -205,7 +209,14 @@ export interface PagoPayload {
 const rtoSlice = createSlice({
     name: 'rto',
     initialState,
-    reducers: {},
+    reducers: {
+        clearMessage(state) {
+            state.message = null
+        },
+        clearSuccessPay(state) {
+            state.pago_success = false
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(mostrarRto.fulfilled, (state, action: PayloadAction<PayloadRto>) => {
@@ -215,7 +226,7 @@ const rtoSlice = createSlice({
             })
             .addCase(mostrarRto.rejected, (state) => {
                 state.loading = false;
-                state.message = "No se encotro patente";
+                state.error = "No se encotro patente";
 
             })
             .addCase(mostrarRto.pending, (state) => {
@@ -275,9 +286,12 @@ const rtoSlice = createSlice({
             .addCase(pagar.rejected, (state) => {
                 state.loading = false;
                 state.pago_success = false;
+                state.message = null;
                 state.error = "Error al realizar el pago";
             });
     }
 })
 
+
+export const { clearMessage, clearSuccessPay } = rtoSlice.actions;
 export default rtoSlice.reducer;
