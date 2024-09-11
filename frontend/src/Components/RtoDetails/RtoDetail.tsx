@@ -30,7 +30,7 @@ const RtoDetail: React.FC<RtoDetailProps> = ({rto}) => {
                     <p className="item-rto title-rto">Rto</p>
                     <div className="div-element">
                         <p className="item-rto heavy-font">Resultado: <span className={`heavy-font ${styleCond}`}>{rto.resultado}</span></p>
-                        <p className="item-rto heavy-font">Mecanico: <span className="light-font">{rto.nombre_mecanico}</span></p>
+                        
                     </div>
                     <p className="item-rto desc">{rto.descripcion}</p>
                 </div>

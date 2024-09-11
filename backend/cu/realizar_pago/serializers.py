@@ -17,7 +17,7 @@ class RtoSerializer(serializers.ModelSerializer):
     rel_vehiculo = VehiculoSerializer()
     class Meta:
         model = Rto
-        fields = ['id','fecha','nombre_mecanico','resultado','rel_vehiculo']
+        fields = ['id','fecha','resultado','rel_vehiculo']
 
 
 class FacturaSerializer(serializers.ModelSerializer):

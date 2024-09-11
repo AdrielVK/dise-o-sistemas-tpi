@@ -29,7 +29,7 @@ class UI(viewsets.ViewSet):
     def mostrarRto(self, request):
         try:
             patente = request.query_params.get('patente')
-            vehiculo = Taller.getVehiculo(patente)
+            vehiculo = Controller.getVehiculo(patente)
 
             rto = Rto.getUltimaRto(vel=vehiculo)
 
@@ -46,7 +46,7 @@ class UI(viewsets.ViewSet):
         id_rto = request.query_params.get('id_rto')
         rto = Rto.objects.get(id=id_rto)
         
-        factura = Taller.generarFactura(rto)
+        factura = Controller.generarFactura(rto)
         
         vehiculo = rto.rel_vehiculo
         precio_categoria = vehiculo.rel_categoria.precio
@@ -58,12 +58,12 @@ class UI(viewsets.ViewSet):
 
     @action(detail=False, methods=['get'], url_path='mostrar-mp')
     def mostrarMP(self, request):
-        mp = Taller.mostrarMetodosDePago()
+        mp = Controller.mostrarMetodosDePago()
         return Response({"metodos": mp}, status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'], url_path='pagar')
     def pagar(self,request):
-        pago = Taller.realizar_pago(request)
+        pago = Controller.realizar_pago(request)
 
         if pago:
             return Response({"Pago exitoso"}, status=status.HTTP_200_OK)
@@ -71,7 +71,7 @@ class UI(viewsets.ViewSet):
             return Response({"Pago rechazado"}, status=status.HTTP_400_BAD_REQUEST)
         
 
-class Taller():
+class Controller():
     nombre = "9xpertos"
     direccion = "calle 123"
     cuit = "11-111111-11"

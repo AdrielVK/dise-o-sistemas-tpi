@@ -32,7 +32,7 @@ class Rto(models.Model):
     )
 
     fecha = models.DateField()
-    nombre_mecanico = models.CharField(max_length=255)  
+    #nombre_mecanico = models.CharField(max_length=255)  
     resultado = models.CharField(choices=resultados, default="rechazado", max_length=15)
     
     rel_vehiculo = models.OneToOneField(Vehiculo, on_delete=models.CASCADE, blank=False)

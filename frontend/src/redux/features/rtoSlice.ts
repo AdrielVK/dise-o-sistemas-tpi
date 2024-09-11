@@ -18,7 +18,7 @@ export interface Vehiculo {
 export interface Rto {
     id: number;
     descripcion: string;
-    nombre_mecanico: string;
+    //nombre_mecanico: string;
     resultado: string;
     rel_vehiculo: Vehiculo;
 }
